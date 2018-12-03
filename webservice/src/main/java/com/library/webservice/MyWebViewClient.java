@@ -1,0 +1,140 @@
+package com.library.webservice;
+
+/**
+ * Created by Administrator on 2017\11\23 0023.
+ */
+
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.net.http.SslError;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Toast;
+
+import com.alipay.sdk.app.H5PayCallback;
+import com.alipay.sdk.app.PayTask;
+import com.alipay.sdk.util.H5PayResultModel;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
+/**
+ * webviewb必须实现的方法 ，解决
+ */
+public class MyWebViewClient extends WebViewClient {
+    private Activity activity;
+    private String murl;
+//    private CustomProgressDialog loadingPd;
+
+    private String qq = "mqqwpa:";
+    private String wenxin = "weixin://wap/pay?";
+    private String phone = "tel:";
+    private String errorPath = "file:/android_asset/Networkoutage/webview404.html";
+    private boolean isSourceRaw = false;
+
+
+    public MyWebViewClient(Activity activity, String murl) {
+        this.activity = activity;
+        this.murl = murl;
+    }
+
+//    public MyWebViewClient(Activity activity, String murl, CustomProgressDialog loadingPd) {
+//        this.activity = activity;
+//        this.murl = murl;
+//        this.loadingPd = loadingPd;
+//    }
+
+    public void setSourceRaw(boolean sourceRaw) {
+        isSourceRaw = sourceRaw;
+    }
+
+    /**
+     * 加载页面的服务器出现错误时（如404）调用。
+     */
+    @Override
+    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+        if (errorCode == ERROR_HOST_LOOKUP || errorCode == ERROR_CONNECT || errorCode == ERROR_TIMEOUT) {   // 断网或者网络连接超时
+            view.loadUrl("about:blank"); // 避免出现默认的错误界面
+            view.loadUrl(errorPath);
+        }
+    }
+
+    /**
+     * 接受信任所有网站的证书
+     */
+    @Override
+    public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+        handler.proceed();
+    }
+
+    /**
+     * 作用：打开网页时不调用系统浏览器， 而是在本WebView中显示；在网页上的所有加载都经过这个方法,这个函数我们可以做很多操作。
+     */
+    @Override
+    public boolean shouldOverrideUrlLoading(final WebView view, String url) {
+        Log.i("MyWebViewClient", "shouldOverrideUrlLoading" + url);
+        final PayTask task = new PayTask(activity);//跳转到支付宝,推荐采用的新的二合一接口(payInterceptorWithUrl),只需调用一次
+        boolean isIntercepted = task.payInterceptorWithUrl(url, true, new H5PayCallback() {
+            @Override
+            public void onPayResult(final H5PayResultModel result) {
+                final String url = result.getReturnUrl();
+                if (!TextUtils.isEmpty(url)) {
+                    view.loadUrl(url);
+                }
+            }
+        });
+        if (!isIntercepted)//判断是否成功拦截,若成功拦截，则无需继续加载该URL；否则继续加载 https://wappaygw.alipay.com
+            if (!url.equalsIgnoreCase(murl)) //判断是否与当前url相同，
+                if (url.startsWith(qq) || url.startsWith(wenxin) || url.startsWith(phone)) {
+                    try {
+                        activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                        return true;
+                    } catch (Exception e) {
+                        Toast.makeText(activity, "启动异常！\n请检查是否安装了该应用.", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (url.startsWith("http:") || url.startsWith("https:")) {
+                    if (isSourceRaw) {
+                        Intent intent = new Intent(activity, WebActivity.class);
+                        intent.putExtra("url", url);
+                        activity.startActivity(intent);
+                    } else {
+                        view.loadData("", "text/html", "UTF-8");  //解决部分手机调用不到js的
+                        Map extraHeaders = new HashMap(); //解决微信支付少参数问题
+                        extraHeaders.put("Referer", "");
+                        view.loadUrl(url, extraHeaders);//""加载页面
+                    }
+                    return true;//返回true表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
+                }
+        return super.shouldOverrideUrlLoading(view, url);
+    }
+
+
+    /**
+     * 开始载入页面调用的，我们可以设定一个loading的页面，告诉用户程序在等待网络响应。
+     */
+    @Override
+    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+//        if (loadingPd != null) {  //设定加载开始的操作
+//            loadingPd.setTitle("正在加载...");
+//            loadingPd.show();
+//        }
+    }
+
+    /**
+     * 在页面加载结束时调用。我们可以关闭loading 条，切换程序动作。
+     */
+    @Override
+    public void onPageFinished(WebView view, String url) {
+        view.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+//        if (loadingPd != null && loadingPd.isShowing()) { //加载完网页进度条消失
+//            loadingPd.dismiss();
+//        }
+    }
+}
