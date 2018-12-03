@@ -1,7 +1,10 @@
 package com.library.webservice;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -31,7 +34,7 @@ public class WebActivity extends AppCompatActivity {
 
     }
 
-    public void setMurl(String murl) {
+    public void setUrl(String murl) {
         this.murl = murl;
     }
 
@@ -47,7 +50,7 @@ public class WebActivity extends AppCompatActivity {
         webviewUtils.setConfig();
         webviewUtils.WebChromeClient(new MyWebChromeClient(WebActivity.this, progressbar));
         webviewUtils.setWebViewClient(new MyWebViewClient(WebActivity.this, murl));
-        webviewUtils.setDownloadListener(new MyWebViewDownLoadListener(WebActivity.this));
+        webviewUtils.setDownloadListener(new MyWebViewDownLoadListener(WebActivity.this,true));
 //        webviewUtils.addJavascriptInterface(new JavaScriptinterface(this));
         webviewUtils.startloadUrl(webview, murl);
 
@@ -56,20 +59,18 @@ public class WebActivity extends AppCompatActivity {
     /**
      * webview返回数据处理
      */
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        switch (requestCode) {
-//            case MainConstant.REQUEST_CODE_CAMERA:
-//                DialogUtils.getInstance().takePictureResult(resultCode, DialogUtils.getInstance().getCameraFile());
-//                break;
-//            case MainConstant.REQUEST_CODE_PHOTOS:
-//                DialogUtils.getInstance().takePhotoResult(this, resultCode, data);
-//                break;
-//            case MainConstant.REQUEST_CODE_FILE:
-//                DialogUtils.getInstance().takeFileResult(this, resultCode, data);
-//                break;
-//        }
-//    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case DialogUtils.REQUEST_CODE_CAMERA:
+                DialogUtils.getInstance().takePictureResult(resultCode, DialogUtils.getInstance().getCameraFile());
+                break;
+            case DialogUtils.REQUEST_CODE_PHOTOS:
+                DialogUtils.getInstance().takePhotoResult(this, resultCode, data);
+                break;
+
+        }
+    }
 
     @Override
     public void onStart() {

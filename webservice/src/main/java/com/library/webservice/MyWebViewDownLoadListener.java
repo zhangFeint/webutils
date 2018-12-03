@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.webkit.DownloadListener;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,23 +21,22 @@ import java.net.URL;
 public class MyWebViewDownLoadListener implements DownloadListener {
 
     private Activity activity;
-    private boolean isSourceRaw = false;
-    public MyWebViewDownLoadListener(Activity activity) {
-        this.activity = activity;
-    }
+    private boolean isSourceRaw;
 
     public MyWebViewDownLoadListener(Activity activity, boolean isSourceRaw) {
         this.activity = activity;
         this.isSourceRaw = isSourceRaw;
     }
+
     @Override
     public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
         if (isSourceRaw) {
+            new Thread(new DownLoadThread(url)).start();
+
+        } else {
             Uri uri = Uri.parse(url);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             activity.startActivity(intent);
-        } else {
-            new Thread(new DownLoadThread(url)).start();
         }
     }
 
@@ -59,7 +57,7 @@ public class MyWebViewDownLoadListener implements DownloadListener {
                 downloadFile(sdFile, conn.getInputStream(), conn.getContentLength(), new OnDownloadListener() {
                     @Override
                     public void onDownloadSuccess(File file) {
-                        Toast.makeText(activity, "下载完毕~~~~", Toast.LENGTH_SHORT).show();
+
                     }
 
                     @Override
@@ -125,6 +123,7 @@ public class MyWebViewDownLoadListener implements DownloadListener {
 
 
     }
+
 
     public interface OnDownloadListener {
         //················下载成功·················

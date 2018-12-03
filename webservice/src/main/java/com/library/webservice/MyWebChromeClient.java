@@ -25,9 +25,6 @@ public class MyWebChromeClient extends WebChromeClient {
     private String errorPath = "file:/android_asset/Networkoutage/webview404.html";
 
 
-    public MyWebChromeClient(Activity activity) {
-        this.activity = activity;
-    }
 
     public MyWebChromeClient(Activity activity, ProgressBar progressBar) {
         this.activity = activity;
@@ -93,7 +90,7 @@ public class MyWebChromeClient extends WebChromeClient {
     }
 
     private void isFile(ValueCallback valueCallback) {
-//        DialogUtils.getInstance().showWebCameraDialog(activity, valueCallback);
+        DialogUtils.getInstance().showCameraDialog(activity, valueCallback);
     }
 
     /**
