@@ -9,13 +9,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.webkit.ValueCallback;
 
 import java.io.File;
@@ -55,11 +55,8 @@ public class DialogUtils {
      * 弹出对话框
      */
     public void showCameraDialog(final Activity activity, ValueCallback valueCallback) {
-
-        ActivityCompat.requestPermissions(activity,
-                CAMERA_PERMISSIONS,REQUEST_CODE_PERMISSION);
-
         this.valueCallback = valueCallback;
+        PermissionUtils.checkAndRequestMorePermissions(activity,CAMERA_PERMISSIONS,REQUEST_CODE_PERMISSION);
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("请选择");
         builder.setItems(new String[]{"相机", "相册", "取消选择"}, new DialogInterface.OnClickListener() {
@@ -79,6 +76,8 @@ public class DialogUtils {
             }
         });
         builder.create().show();
+
+
     }
 
     /**
