@@ -1,4 +1,4 @@
-package com.library.view;
+package com.library.webutils;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.library.view", appContext.getPackageName());
+        assertEquals("com.library.webutils", appContext.getPackageName());
     }
 }

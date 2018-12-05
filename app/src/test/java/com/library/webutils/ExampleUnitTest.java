@@ -1,4 +1,4 @@
-package com.library.view;
+package com.library.webutils;
 
 import org.junit.Test;
 
