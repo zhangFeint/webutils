@@ -5,6 +5,7 @@ package com.library.view.webview;
  */
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,6 +14,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -31,7 +34,6 @@ import java.util.Map;
 public class MyWebViewClient extends WebViewClient {
     private Activity activity;
     private String murl;
-//    private CustomProgressDialog loadingPd;
 
     private String qq = "mqqwpa:";
     private String wenxin = "weixin://wap/pay?";
@@ -44,26 +46,22 @@ public class MyWebViewClient extends WebViewClient {
         this.activity = activity;
         this.murl = murl;
     }
-
-//    public MyWebViewClient(Activity activity, String murl, CustomProgressDialog loadingPd) {
-//        this.activity = activity;
-//        this.murl = murl;
-//        this.loadingPd = loadingPd;
-//    }
-
-    public void setSourceRaw(boolean sourceRaw) {
+    public MyWebViewClient(Activity activity, String murl,boolean sourceRaw) {
+        this.activity = activity;
+        this.murl = murl;
         isSourceRaw = sourceRaw;
     }
+
 
     /**
      * 加载页面的服务器出现错误时（如404）调用。
      */
+
     @Override
-    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        if (errorCode == ERROR_HOST_LOOKUP || errorCode == ERROR_CONNECT || errorCode == ERROR_TIMEOUT) {   // 断网或者网络连接超时
-            view.loadUrl("about:blank"); // 避免出现默认的错误界面
-            view.loadUrl(errorPath);
-        }
+    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+        super.onReceivedError(view,request,error);
+        view.loadUrl("about:blank"); // 避免出现默认的错误界面
+        view.loadUrl(errorPath);
     }
 
     /**
@@ -112,7 +110,7 @@ public class MyWebViewClient extends WebViewClient {
                     }
                     return true;//返回true表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
                 }
-        return super.shouldOverrideUrlLoading(view, url);
+        return false;
     }
 
 
@@ -121,10 +119,7 @@ public class MyWebViewClient extends WebViewClient {
      */
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
-//        if (loadingPd != null) {  //设定加载开始的操作
-//            loadingPd.setTitle("正在加载...");
-//            loadingPd.show();
-//        }
+
     }
 
     /**
@@ -132,9 +127,7 @@ public class MyWebViewClient extends WebViewClient {
      */
     @Override
     public void onPageFinished(WebView view, String url) {
-        view.setLayerType(View.LAYER_TYPE_HARDWARE,null);
-//        if (loadingPd != null && loadingPd.isShowing()) { //加载完网页进度条消失
-//            loadingPd.dismiss();
-//        }
+        view.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
     }
 }

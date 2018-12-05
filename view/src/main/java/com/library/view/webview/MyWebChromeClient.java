@@ -2,6 +2,7 @@ package com.library.view.webview;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -22,10 +23,9 @@ import android.widget.ProgressBar;
 public class MyWebChromeClient extends WebChromeClient {
     private Activity activity;
     private ProgressBar progressBar;
-
+    private Dialog loadingPd;
     public static final String[] CAMERA_PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}; //相机权限
     public static final int REQUEST_CODE_PERMISSION = 1010; //权限请求码
-    private String errorPath = "file:/android_asset/Networkoutage/webview404.html";
 
 
     public MyWebChromeClient(Activity activity, ProgressBar progressBar) {
@@ -33,9 +33,11 @@ public class MyWebChromeClient extends WebChromeClient {
         this.progressBar = progressBar;
     }
 
-    public void setErrorPath(String errorPath) {
-        this.errorPath = errorPath;
+    public MyWebChromeClient(Activity activity, Dialog loadingPd) {
+        this.activity = activity;
+        this.loadingPd = loadingPd;
     }
+
 
     /**
      * 作用：获取Web页中的标题
@@ -44,12 +46,6 @@ public class MyWebChromeClient extends WebChromeClient {
     @Override
     public void onReceivedTitle(WebView view, String title) {
         super.onReceivedTitle(view, title);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            if (title.contains("404") || title.contains("500") || title.contains("Error")) {
-                view.loadUrl("about:blank");    // 避免出现默认的错误界面
-                view.loadUrl(errorPath);
-            }
-        }
     }
 
     /**
@@ -63,6 +59,16 @@ public class MyWebChromeClient extends WebChromeClient {
             } else {
                 progressBar.setVisibility(View.VISIBLE);//开始加载网页时显示进度条
                 progressBar.setProgress(newProgress);//设置进度值
+            }
+        }
+        if (loadingPd != null) {
+            if (newProgress == 100) {
+                if (loadingPd.isShowing()) { //加载完网页进度条消失
+                    loadingPd.dismiss();
+                }
+            } else {
+                loadingPd.setTitle("正在加载...");
+                loadingPd.show();
             }
         }
         super.onProgressChanged(view, newProgress);
@@ -107,7 +113,7 @@ public class MyWebChromeClient extends WebChromeClient {
      */
     @Override
     public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
-        showDialog(view, url, message, result);
+        showDialog( message, result);
         return true;
     }
 
@@ -116,7 +122,7 @@ public class MyWebChromeClient extends WebChromeClient {
      */
     @Override
     public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
-        showDialog(view, url, message, result);
+        showDialog( message, result);
         return true;
     }
 
@@ -125,11 +131,11 @@ public class MyWebChromeClient extends WebChromeClient {
      */
     @Override
     public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, final JsPromptResult result) {
-        showDialog(view, url, message, result);
+        showDialog( message, result);
         return true;
     }
 
-    public void showDialog(WebView view, String url, String message, final JsResult result) {
+    public void showDialog( String message, final JsResult result) {
         AlertDialog.Builder b = new AlertDialog.Builder(activity);
         b.setMessage(message);
         b.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

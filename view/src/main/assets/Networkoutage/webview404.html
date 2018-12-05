@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="format-detection" content="telephone=no, address=no, email=no">
+		<meta charset="utf-8">
+		<title>错误页面</title>
+		<style type="text/css">
+			*{margin: 0px;
+			  padding: 0px;
+			  font-family: "微软雅黑";
+			  }
+			  
+			  img{display: block;}
+			  body{background: #fbfbfb;}
+			  .imgno{width: 3rem; margin: 0px auto;}
+			  .imgno img{width: 100%;
+			            margin-top: 16rem;}
+			            
+			  .no-title p{text-align: center;
+			            font-size: 0.6rem; font-weight: bold;
+			            margin: 0.5rem 0rem;}
+			 .no-title span{text-align: center;
+			            font-size: 0.6rem; font-weight: 600;
+			           display: block;
+			            color: #D0D0D0;}
+		</style>
+	</head>
+	<body onclick="javaScript:history.back(-1)">
+	   <div class="imgno">
+	   	<img src="imgs/network_outage.png"/>
+	   </div>
+	   <div class="no-title">
+	   	<p>网络不给力啊</p>
+	   	<span>亲，检查一下网络在试试吧</span>
+	   	<span>点击重新加载</span>
+	   </div>
+	</div>
+	</body>
+	
+	<script type="text/javascript">
+		var  size=(document.documentElement.clientWidth/450)*20+'px';
+
+document.documentElement.style.fontSize=size
+
+	</script>
+	
+</html>
