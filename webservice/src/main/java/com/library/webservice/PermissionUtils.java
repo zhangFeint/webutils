@@ -159,7 +159,7 @@ public class PermissionUtils {
     }
 
     /**
-     * 检测并申请多个权限
+     * 检测并申请多个权限(推荐)
      */
     public static void checkAndRequestMorePermissions(Activity activity, String[] permissions, int requestCode, PermissionRequestSuccessCallBack callBack) {
         List<String> permissionList = checkMorePermissions(activity, permissions);

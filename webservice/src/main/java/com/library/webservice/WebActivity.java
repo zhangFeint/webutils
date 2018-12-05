@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -34,9 +35,6 @@ public class WebActivity extends AppCompatActivity {
 
     }
 
-    public void setUrl(String murl) {
-        this.murl = murl;
-    }
 
     /**
      * 实例化控件
@@ -70,16 +68,6 @@ public class WebActivity extends AppCompatActivity {
                 break;
 
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
     /***

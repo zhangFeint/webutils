@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.webkit.ValueCallback;
 
 import java.io.File;
@@ -38,9 +39,8 @@ public class DialogUtils {
     public static final int REQUEST_CODE_PHOTOS = 111;//相册选择结果码
     public static final int REQUEST_CODE_FILE = 112;//文件选择结果码
 
-    public static final int REQUEST_CODE_PERMISSION = 1010; //权限请求码
     private String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera";
-    public static final String[] CAMERA_PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}; //相机权限
+
     private Uri cameraUri;//相机返回的绝对路径
     private File file;    //相机返回的文件
 
@@ -56,7 +56,6 @@ public class DialogUtils {
      */
     public void showCameraDialog(final Activity activity, ValueCallback valueCallback) {
         this.valueCallback = valueCallback;
-        PermissionUtils.checkAndRequestMorePermissions(activity,CAMERA_PERMISSIONS,REQUEST_CODE_PERMISSION);
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("请选择");
         builder.setItems(new String[]{"相机", "相册", "取消选择"}, new DialogInterface.OnClickListener() {
@@ -76,8 +75,6 @@ public class DialogUtils {
             }
         });
         builder.create().show();
-
-
     }
 
     /**

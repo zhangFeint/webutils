@@ -1,5 +1,6 @@
 package com.library.webservice;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -9,10 +10,12 @@ import android.view.View;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 
 /**
@@ -22,8 +25,9 @@ public class MyWebChromeClient extends WebChromeClient {
     private Activity activity;
     private ProgressBar progressBar;
 
+    public static final String[] CAMERA_PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}; //相机权限
+    public static final int REQUEST_CODE_PERMISSION = 1010; //权限请求码
     private String errorPath = "file:/android_asset/Networkoutage/webview404.html";
-
 
 
     public MyWebChromeClient(Activity activity, ProgressBar progressBar) {
@@ -73,6 +77,7 @@ public class MyWebChromeClient extends WebChromeClient {
         super.onGeolocationPermissionsShowPrompt(origin, callback);
     }
 
+
     /**
      * 上传文件问题，需要下方方法
      */
@@ -89,7 +94,13 @@ public class MyWebChromeClient extends WebChromeClient {
         return true;
     }
 
-    private void isFile(ValueCallback valueCallback) {
+    private void isFile(final ValueCallback valueCallback) {
+        PermissionUtils.checkAndRequestMorePermissions(activity, CAMERA_PERMISSIONS, REQUEST_CODE_PERMISSION, new PermissionUtils.PermissionRequestSuccessCallBack() {
+            @Override
+            public void onHasPermission() {
+
+            }
+        });
         DialogUtils.getInstance().showCameraDialog(activity, valueCallback);
     }
 
