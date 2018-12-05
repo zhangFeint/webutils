@@ -188,7 +188,7 @@ public class DialogUtils {
     /**
      * 置空FilePathCallback 对象
      */
-    private void cancelFilePathCallback() {
+    public void cancelFilePathCallback() {
         if (valueCallback != null) {
             valueCallback.onReceiveValue(null);
             valueCallback = null;
