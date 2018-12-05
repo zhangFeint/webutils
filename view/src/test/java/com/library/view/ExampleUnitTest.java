@@ -1,4 +1,4 @@
-package com.library.webservice;
+package com.library.view;
 
 import org.junit.Test;
 

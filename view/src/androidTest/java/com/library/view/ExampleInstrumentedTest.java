@@ -1,4 +1,4 @@
-package com.library.webservice;
+package com.library.view;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -3,10 +3,8 @@ package com.library.webutils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebView;
 
-import com.library.webservice.DialogUtils;
-import com.library.webservice.WebActivity;
+import com.library.view.webview.WebActivity;
 
 public class MainActivity extends AppCompatActivity {
 

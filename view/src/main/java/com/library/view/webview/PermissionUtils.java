@@ -1,4 +1,4 @@
-package com.library.webservice;
+package com.library.view.webview;
 
 import android.app.Activity;
 import android.content.Intent;

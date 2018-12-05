@@ -1,4 +1,4 @@
-package com.library.webservice;
+package com.library.view.webview;
 
 import android.Manifest;
 import android.app.Activity;
@@ -10,12 +10,10 @@ import android.view.View;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
-import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 
 /**
