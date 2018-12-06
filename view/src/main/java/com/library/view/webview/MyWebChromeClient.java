@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
@@ -48,7 +47,7 @@ public class MyWebChromeClient extends WebChromeClient {
         super.onReceivedTitle(view, title);
     }
 
-    /**
+      /**
      * 作用：获得网页的加载进度并显示
      */
     @Override

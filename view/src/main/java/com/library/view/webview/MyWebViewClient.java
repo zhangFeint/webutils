@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
@@ -99,9 +100,7 @@ public class MyWebViewClient extends WebViewClient {
                     }
                 } else if (url.startsWith("http:") || url.startsWith("https:")) {
                     if (isSourceRaw) {
-                        Intent intent = new Intent(activity, WebActivity.class);
-                        intent.putExtra("url", url);
-                        activity.startActivity(intent);
+                        WebNavigationActivity.show(activity, url);
                     } else {
                         view.loadData("", "text/html", "UTF-8");  //解决部分手机调用不到js的
                         Map extraHeaders = new HashMap(); //解决微信支付少参数问题
@@ -110,9 +109,13 @@ public class MyWebViewClient extends WebViewClient {
                     }
                     return true;//返回true表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
                 }
-        return false;
+        return super.shouldOverrideUrlLoading(view,url);
     }
 
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        return super.shouldOverrideUrlLoading(view, request);
+    }
 
     /**
      * 开始载入页面调用的，我们可以设定一个loading的页面，告诉用户程序在等待网络响应。
